@@ -1,0 +1,60 @@
+schema_version: 1
+
+context:
+  name: sensormapgeo
+  version: "1.2.2"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/sensormapgeo-${{ version }}.tar.gz
+  sha256: ecfb8146836e661435cea0187d26237ad8e7e7875d2c9409a6ba266b5f362052
+
+build:
+  number: 1
+  skip: match(python, "<3.10")
+  script: ${{ PYTHON }} -m pip install . -vv
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then: python
+    - if: build_platform != target_platform
+      then: cross-python_${{ target_platform }}
+  host:
+    - pip
+    - python
+    - setuptools
+  run:
+    - gdal >=3.8
+    - joblib
+    - numpy
+    - py-tools-ds >=0.18.0
+    - pyproj >=2.2
+    - pyresample >=1.17.0
+    - python
+
+tests:
+  - python:
+      imports:
+        - sensormapgeo
+        - sensormapgeo.transformer
+        - sensormapgeo.gdal_backend.transformer_2d
+        - sensormapgeo.gdal_backend.transformer_3d
+        - sensormapgeo.pyresample_backend.transformer_2d
+        - sensormapgeo.pyresample_backend.transformer_3d
+        - sensormapgeo.transformer_2d
+        - sensormapgeo.transformer_3d
+      pip_check: true
+
+about:
+  summary: A package for transforming remote sensing images between sensor and map geometry.
+  license: Apache-2.0
+  license_file: LICENSE
+  homepage: https://git.gfz-potsdam.de/EnMAP/sensormapgeo
+
+extra:
+  recipe-maintainers:
+    - danschef
