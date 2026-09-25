@@ -28,7 +28,7 @@ requirements:
     - python
     - setuptools
   run:
-    - gdal >=3.8
+    - gdal >=3.8,<3.13
     - joblib
     - numpy
     - py-tools-ds >=0.18.0
